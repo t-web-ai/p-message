@@ -45,7 +45,7 @@ function renderUserName(id, name, checked) {
               <input type="radio" name="user" value="${id}" onclick="choose('${id}', '${name}')" 
                 id="${id}"
                 ${checked && "checked"}
-                class="[&:checked+label>div]:bg-gray-300 hidden">
+                class="hidden">
               <label for="${id}" >
                 <div class="p-2">
                 <div class="break-all">${name}</div>
@@ -57,9 +57,9 @@ function renderUserName(id, name, checked) {
 }
 
 function renderAlertBoxMessage(title, description) {
-  return `<div class="bg-gray-500/60 backdrop-blur-[2px] text-white w-70 rounded-lg p-2 px-4">
+  return `<div class="bg-gray-500/70 backdrop-blur-[2px] text-white w-70 rounded-lg p-2 px-4">
         <div class="font-semibold flex justify-between">
-          <div>${title}</div>
+          <div class="text-gray-300">${title}</div>
           <div onclick="closeAlertBox()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +75,7 @@ function renderAlertBoxMessage(title, description) {
             </svg>
           </div>
         </div>
-        <div>${description}</div>
+        <div class="font-semibold break-all text-white cursor-pointer">${description}</div>
       </div>`;
 }
 
@@ -195,7 +195,7 @@ socket.on("getMessage", (data, senderName) => {
     showAlertBox(
       renderAlertBoxMessage(
         "Notification",
-        `You have got a message from ${senderName}`
+        `<div onclick="choose('${data.sender}','${senderName}')">View the message</div>`
       )
     );
     setTimeout(closeAlertBox, 3500);
