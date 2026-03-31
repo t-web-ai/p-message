@@ -45,7 +45,7 @@ function renderUserName(id, name, checked) {
               <input type="radio" name="user" value="${id}" onclick="choose('${id}', '${name}')" 
                 id="${id}"
                 ${checked && "checked"}
-                class="hidden">
+                class="[&:checked+label>div]:bg-gray-300 hidden">
               <label for="${id}" >
                 <div class="p-2">
                 <div class="break-all">${name}</div>
@@ -195,12 +195,17 @@ socket.on("getMessage", (data, senderName) => {
     showAlertBox(
       renderAlertBoxMessage(
         "Notification",
-        `<div onclick="choose('${data.sender}','${senderName}')">View the message</div>`
+        `<div onclick="viewMessage('${data.sender}','${senderName}')">View the message</div>`
       )
     );
     setTimeout(closeAlertBox, 3500);
   }
 });
+
+function viewMessage(id, name) {
+  choose(id, name);
+  document.getElementById(`${id}`).click();
+}
 
 function renderReceivedMessage(message) {
   let outerBoxContainer = document.createElement("div");
