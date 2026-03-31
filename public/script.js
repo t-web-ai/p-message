@@ -8,7 +8,8 @@ const auth = document.querySelector("#auth");
 const inputBox = document.querySelector("#input-box");
 const sideBar = document.querySelector("#side-bar");
 const backButton = document.querySelector("#back-button");
-let messageBox = document.querySelector("#message-box");
+const messageBox = document.querySelector("#message-box");
+const alertBox = document.querySelector("#alert-box");
 
 class User {
   setId(id) {
@@ -55,6 +56,36 @@ function renderUserName(id, name, checked) {
           </tr>`;
 }
 
+function renderAlertBoxMessage(title, description) {
+  return `<div class="bg-gray-500/60 backdrop-blur-[2px] text-white w-70 rounded-lg p-2 px-4">
+        <div class="font-semibold flex justify-between">
+          <div>${title}</div>
+          <div onclick="closeAlertBox()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-x-lg"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div>${description}</div>
+      </div>`;
+}
+
+function showAlertBox(boxInfo) {
+  alertBox.innerHTML = boxInfo;
+}
+function closeAlertBox() {
+  alertBox.innerHTML = "";
+}
+
 function resetMessageBox() {
   receiver.setId(null);
   receiver.setName(null);
@@ -80,10 +111,6 @@ socket.on("getPairOfNameAndId", (user) => {
   owner.setId(user.id);
   owner.setName(user.name);
 });
-
-// list.innerHTML = Array.from({ length: 20 }, (_, index) => {
-//   return renderUserName(index, `Name ${index}`, false);
-// }).join("");
 
 socket.on("getOnlineUsers", (users) => {
   list.innerHTML = users
@@ -111,7 +138,11 @@ document.forms[0].onsubmit = function () {
       resetInputBox();
     }
   } else {
-    alert("You haven't selected anyone yet.");
+    showAlertBox(
+      renderAlertBoxMessage("Warning", "You haven't selected anyone yet.")
+    );
+
+    setTimeout(closeAlertBox, 3500);
   }
   return false;
 };
@@ -161,7 +192,13 @@ socket.on("getMessage", (data, senderName) => {
     renderReceivedMessage(data.message);
     scrollMessageToBottom();
   } else {
-    alert("Got a message from " + senderName);
+    showAlertBox(
+      renderAlertBoxMessage(
+        "Notification",
+        `You have got a message from ${senderName}`
+      )
+    );
+    setTimeout(closeAlertBox, 3500);
   }
 });
 
